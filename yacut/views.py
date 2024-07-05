@@ -1,6 +1,6 @@
 from random import choice
 import string
-from urllib.parse import urljoin
+import urllib
 
 from flask import abort, flash, redirect, render_template, request
 
@@ -32,7 +32,10 @@ def index_view():
             custom_id = get_unique_short_id(0)
 
         if URLMap.query.filter_by(short=custom_id).first() is not None:
-            flash(f'Короткий адрес "{custom_id}" уже был занят ранее!')
+            flash(
+                f'Предложенный вариант короткой ссылки "{custom_id}" '
+                'уже существует.'
+            )
             return render_template('index.html', form=form)
 
         urlmap = URLMap(
@@ -43,7 +46,7 @@ def index_view():
         db.session.commit()
         newlink_message = (
             'Ваша новая ссылка готова!'
-            f'\n{urljoin(request.url_root, urlmap.short)}'
+            f'\n{urllib.parse.urljoin(request.url_root, urlmap.short)}'
         )
         return render_template(
             'index.html',
@@ -56,5 +59,5 @@ def index_view():
 
 @app.route('/<short_url>', methods=['GET'])
 def reroute_view(short_url):
-    reroute = URLMap.query.filter_by(short=short_url).get_or_404()
+    reroute = URLMap.query.filter_by(short=short_url).first_or_404()
     return redirect(reroute.original)

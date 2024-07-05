@@ -1,4 +1,5 @@
 from datetime import datetime
+import urllib
 
 from . import db
 
@@ -10,3 +11,12 @@ class URLMap(db.Model):
     timestamp = db.Column(
         db.DateTime, index=True, default=datetime.utcnow
         )
+    
+    def api_creation_to_dict(self, request):
+        return dict(
+            url=self.original,
+            short_link=urllib.parse.urljoin(request.url_root, self.short)
+        )
+    
+    def api_redirection_to_dict(self):
+        return dict(url=self.original)
