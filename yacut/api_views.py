@@ -9,6 +9,7 @@ from .views import get_unique_short_id
 
 REGEX_ALPHANUMERIC = r'^[A-Za-z0-9]+$'
 
+
 def check_required_field(api_data: dict, required_field: str):
     """Вызывает исключение если в запросе отсутствует обязательное поле."""
     if api_data is None:
@@ -16,6 +17,7 @@ def check_required_field(api_data: dict, required_field: str):
     if required_field not in api_data:
         raise InvalidAPIUsage(
             f'"{required_field}" является обязательным полем!')
+
 
 @app.route('/api/id/', methods=['POST'])
 def create_short_link():
@@ -25,8 +27,8 @@ def create_short_link():
         raise InvalidAPIUsage('Отсутствует тело запроса')
 
     if 'url' not in data:
-        raise InvalidAPIUsage(f'"url" является обязательным полем!')
-    
+        raise InvalidAPIUsage('"url" является обязательным полем!')
+
     custom_id = data.get('custom_id')
     if custom_id:
         print(f'Запрос с кастомным url: {custom_id}')

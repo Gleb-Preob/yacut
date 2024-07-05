@@ -18,7 +18,7 @@ def get_unique_short_id(call_number):
     if not URLMap.query.filter_by(short=text).first():
         return text
     else:
-        return get_unique_short_id(call_number+1)
+        return get_unique_short_id(call_number + 1)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -32,7 +32,7 @@ def index_view():
 
         if URLMap.query.filter_by(short=custom_id).first() is not None:
             flash(
-                f'Предложенный вариант короткой ссылки уже существует.'
+                'Предложенный вариант короткой ссылки уже существует.'
             )
             return render_template('index.html', form=form)
 
