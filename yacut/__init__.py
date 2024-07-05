@@ -1,15 +1,14 @@
 from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-
 from settings import BASE_DIR, Config
 
-STATIC_DIR = BASE_DIR / 'html'
+FRONTEND_DIR = BASE_DIR / 'frontend'
 
 app = Flask(
     __name__,
-    static_folder=STATIC_DIR,
-    template_folder=STATIC_DIR / 'templates'
+    static_folder=FRONTEND_DIR / 'static',
+    template_folder=FRONTEND_DIR / 'templates'
 )
 app.config.from_object(Config)
 db = SQLAlchemy(app)
