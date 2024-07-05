@@ -9,7 +9,7 @@ STATIC_DIR = BASE_DIR / 'html'
 app = Flask(
     __name__,
     static_folder=STATIC_DIR,
-    template_folder=STATIC_DIR
+    template_folder=STATIC_DIR / 'templates'
 )
 app.config.from_object(Config)
 db = SQLAlchemy(app)
