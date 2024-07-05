@@ -108,8 +108,10 @@
                 {% endif %}
               {% endwith %}
               <!-- <h5 class="text-center">Пример информационного сообщения</h5> -->
-              {% if newlink_message %}
-              <h5 class="text-center">{{ newlink_message }}</h5>
+              {% if new_link %}
+              <h5 class="text-center">Ваша новая ссылка готова:<br />
+                <a href="{{ new_link }}">{{ new_link }}</a>
+              </h5>
               {% endif %}
             </p>
           </div>

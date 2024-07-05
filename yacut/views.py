@@ -1,13 +1,12 @@
-from random import choice
 import string
 import urllib
+from random import choice
 
 from flask import abort, flash, redirect, render_template, request
 
 from . import app, db
 from .forms import URLMapForm
 from .models import URLMap
-
 
 CHAR_CHOICES = string.ascii_lowercase + string.digits + string.ascii_uppercase
 
@@ -33,8 +32,7 @@ def index_view():
 
         if URLMap.query.filter_by(short=custom_id).first() is not None:
             flash(
-                f'Предложенный вариант короткой ссылки "{custom_id}" '
-                'уже существует.'
+                f'Предложенный вариант короткой ссылки уже существует.'
             )
             return render_template('index.html', form=form)
 
@@ -44,14 +42,10 @@ def index_view():
         )
         db.session.add(urlmap)
         db.session.commit()
-        newlink_message = (
-            'Ваша новая ссылка готова!'
-            f'\n{urllib.parse.urljoin(request.url_root, urlmap.short)}'
-        )
         return render_template(
             'index.html',
             form=form,
-            newlink_message=newlink_message
+            new_link=urllib.parse.urljoin(request.url_root, urlmap.short)
         )
 
     return render_template('index.html', form=form)

@@ -2,7 +2,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
-from settings import Config, BASE_DIR
+from settings import BASE_DIR, Config
 
 STATIC_DIR = BASE_DIR / 'html'
 

@@ -1,11 +1,11 @@
-from flask import jsonify, request
 import re
+
+from flask import jsonify, request
 
 from . import app, db
 from .error_handlers import InvalidAPIUsage
 from .models import URLMap
 from .views import get_unique_short_id
-
 
 REGEX_ALPHANUMERIC = r'^[A-Za-z0-9]+$'
 
@@ -25,20 +25,25 @@ def create_short_link():
         raise InvalidAPIUsage('Отсутствует тело запроса')
 
     if 'url' not in data:
-        raise InvalidAPIUsage('В запросе отсутствуют обязательное поле')
+        raise InvalidAPIUsage(f'"url" является обязательным полем!')
     
     custom_id = data.get('custom_id')
     if custom_id:
+        print(f'Запрос с кастомным url: {custom_id}')
         if len(custom_id) > 16:
-            raise InvalidAPIUsage('Превышена допустимая длина ссылки: 16')
+            raise InvalidAPIUsage(
+                'Указано недопустимое имя для короткой ссылки'
+            )
 
         if not re.fullmatch(REGEX_ALPHANUMERIC, custom_id):
-            raise InvalidAPIUsage('Допускаются только латинские буквы и цифры')
-        
+            raise InvalidAPIUsage(
+                'Указано недопустимое имя для короткой ссылки'
+            )
+        if custom_id == 'example':
+            print(URLMap.query.filter_by(short=custom_id).first())
         if URLMap.query.filter_by(short=custom_id).first() is not None:
             raise InvalidAPIUsage(
-                f'Предложенный вариант короткой ссылки "{custom_id}" '
-                'уже существует.'
+                'Предложенный вариант короткой ссылки уже существует.'
             )
     else:
         custom_id = get_unique_short_id(0)
@@ -57,5 +62,5 @@ def create_short_link():
 def get_original_link(short_id):
     urlmap = URLMap.query.filter_by(short=short_id).first()
     if urlmap is None:
-        raise InvalidAPIUsage('Адрес с указанным id не найден', 404)
+        raise InvalidAPIUsage('Указанный id не найден', 404)
     return jsonify(urlmap.api_redirection_to_dict()), 200
